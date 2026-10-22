@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SehatLab – Pasien & Tenaga Kesehatan</title>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=Fredoka:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#fff7ec;--card:#fff;--ink:#2b1f52;--mute:#6a6288;--line:#eadff0;--brand:#6c4bf4;--brand-ink:#fff;--soft:#efe9ff;--ok:#12805a;--okbg:#d8f6e8;--hi:#c62a4a;--hibg:#ffe1e8;--lo:#965f00;--lobg:#fff0c2;--c1:#ff5a5f;--c2:#f5a000;--c3:#12b48f;--c4:#2f8cff;--c5:#ee3d8f}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1b1535;--card:#271f4c;--ink:#f4efff;--mute:#b8aedd;--line:#3b3068;--brand:#a58bff;--brand-ink:#1b1535;--soft:#342a63;--ok:#62e0a4;--okbg:#14392c;--hi:#ff9fb0;--hibg:#4b2033;--lo:#ffd166;--lobg:#463710;--c1:#ff8084;--c2:#ffc04d;--c3:#3fd9b4;--c4:#6cb0ff;--c5:#ff7ab8}}
+:root[data-theme="dark"]{--bg:#1b1535;--card:#271f4c;--ink:#f4efff;--mute:#b8aedd;--line:#3b3068;--brand:#a58bff;--brand-ink:#1b1535;--soft:#342a63;--ok:#62e0a4;--okbg:#14392c;--hi:#ff9fb0;--hibg:#4b2033;--lo:#ffd166;--lobg:#463710;--c1:#ff8084;--c2:#ffc04d;--c3:#3fd9b4;--c4:#6cb0ff;--c5:#ff7ab8}
+*{box-sizing:border-box;margin:0}
+:root{padding-top:env(safe-area-inset-top,0px)}
+html,body{min-height:100%}
+body{background-color:var(--bg);background-image:radial-gradient(color-mix(in srgb,var(--brand) 16%,transparent) 1.6px,transparent 1.6px);background-size:24px 24px;color:var(--ink);font:16px/1.5 Figtree,system-ui,-apple-system,"Segoe UI",sans-serif}
+h1,h2,h3,.val,.tile b,.brand{font-family:Fredoka,Figtree,system-ui,sans-serif}
+h1{font-size:26px;line-height:1.2;font-weight:700}h2{font-size:19px;font-weight:600;margin:18px 0 10px}h3{font-size:16px;font-weight:600}
+a{color:var(--brand);font-weight:600}
+button,input,select,textarea{font:inherit;color:inherit}button{cursor:pointer}
+:focus-visible{outline:3px solid var(--brand);outline-offset:2px}
+#app{max-width:480px;margin:0 auto}body.nakes #app{max-width:1040px}
+main{padding:20px 18px 100px}body.nakes main{padding-bottom:40px}
+.mute{color:var(--mute);font-size:14px}.grow{flex:1;min-width:0}.right{text-align:right}
+.card{background:var(--card);border:2px solid var(--line);border-radius:18px;padding:14px}
+.stack>*+*{margin-top:12px}
+label{display:block;font-weight:600;font-size:14px;margin:14px 0 6px}
+input,select,textarea{width:100%;min-height:48px;padding:10px 12px;border:2px solid var(--line);border-radius:12px;background:var(--card)}
+input:focus,select:focus,textarea:focus{border-color:var(--brand)}input[readonly]{background:var(--soft);color:var(--mute)}
+textarea{min-height:100px;resize:vertical}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:0 20px;border:0;border-radius:14px;color:var(--brand-ink);font-weight:700;text-decoration:none;width:100%;background:linear-gradient(180deg,color-mix(in srgb,var(--brand) 85%,#fff),var(--brand));box-shadow:0 4px 0 color-mix(in srgb,var(--brand) 55%,#000);transition:transform .1s,box-shadow .1s}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 color-mix(in srgb,var(--brand) 55%,#000)}
+.btn.ghost,.btn.danger{background:transparent;color:var(--brand);border:2px solid var(--brand);box-shadow:none}.btn.danger{color:var(--hi);border-color:var(--hi)}
+.btn.sm{width:auto;min-height:38px;padding:0 14px;font-size:14px}.btn.ghost:active,.btn.danger:active{transform:none}
+.note{border-radius:12px;padding:10px 12px;font-size:14px;margin-bottom:14px;background:var(--soft);border:2px dashed color-mix(in srgb,var(--brand) 35%,transparent)}
+.note.err{background:var(--hibg);color:var(--hi);border:2px solid var(--hi)}.note.ok{background:var(--okbg);color:var(--ok);border:2px solid var(--ok)}
+.chip{display:inline-block;font-size:12px;font-weight:800;padding:2px 10px;border-radius:99px;white-space:nowrap}
+.chip.ok{background:var(--okbg);color:var(--ok)}.chip.hi{background:var(--hibg);color:var(--hi)}.chip.lo{background:var(--lobg);color:var(--lo)}.chip.n{background:var(--soft);color:var(--brand)}
+.row{display:flex;gap:12px;align-items:center;width:100%;text-align:left;background:var(--card);border:2px solid var(--line);border-radius:18px;padding:12px;text-decoration:none;color:inherit;font-weight:400}
+a.row{border-left:7px solid var(--a,var(--brand))}.row.warn{border-left-color:var(--c2);margin-bottom:16px}
+.avatar{flex:none;width:46px;height:46px;border-radius:50%;display:grid;place-items:center;font-weight:700;font-family:Fredoka,sans-serif;background:color-mix(in srgb,var(--a,var(--brand)) 20%,var(--card));color:var(--a,var(--brand))}
+.hero{background:linear-gradient(135deg,#6c4bf4,#b44cf0 55%,#ff6b9d);color:#fff;position:relative;overflow:hidden;border-radius:26px;padding:22px;margin-bottom:18px;box-shadow:0 6px 0 color-mix(in srgb,#6c4bf4 45%,transparent)}
+.hero::before{content:"";position:absolute;right:-34px;top:-34px;width:130px;height:130px;border-radius:50%;background:rgba(255,255,255,.18)}
+.hero::after{content:"";position:absolute;right:46px;bottom:-44px;width:86px;height:86px;border-radius:50%;background:rgba(255,205,60,.45)}
+.hero>*{position:relative;z-index:1}.hero h1{font-size:30px}.hero p{opacity:.92;font-size:14px}
+.menu{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.tile{position:relative;display:flex;flex-direction:column;gap:8px;min-height:110px;padding:14px;border-radius:20px;text-decoration:none;color:var(--ink);background:var(--card);border:2px solid color-mix(in srgb,var(--t) 30%,var(--line));box-shadow:0 4px 0 color-mix(in srgb,var(--t) 30%,transparent)}
+.tile .ic{width:46px;height:46px;border-radius:15px;display:grid;place-items:center;font-size:24px;background:color-mix(in srgb,var(--t) 16%,var(--card))}
+.tile:active{transform:translateY(3px);box-shadow:none}.tile.lock{opacity:.6;filter:grayscale(.55)}.tile.lock::after{content:"\1F512";position:absolute;top:8px;right:10px}
+.logo{width:68px;height:68px;border-radius:22px;transform:rotate(-7deg);display:grid;place-items:center;font-size:32px;margin-bottom:18px;background:linear-gradient(135deg,var(--c1),var(--c5) 50%,var(--brand));box-shadow:0 6px 0 color-mix(in srgb,var(--c5) 35%,transparent)}
+.login{padding:24px 0}
+.seg{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;background:var(--soft);padding:4px;border-radius:12px;margin:16px 0 4px}
+.seg button{border:0;background:transparent;min-height:42px;border-radius:9px;font-weight:700;font-size:13px;color:var(--mute)}.seg button[aria-pressed=true]{background:var(--card);color:var(--brand)}
+.back{display:inline-block;margin-bottom:8px;text-decoration:none;min-height:40px}
+.bnav{position:fixed;bottom:0;left:0;right:0;background:var(--card);border-radius:22px 22px 0 0;box-shadow:0 -6px 24px color-mix(in srgb,var(--brand) 18%,transparent);padding-bottom:env(safe-area-inset-bottom,0px)}
+.bnav div{max-width:480px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr);gap:4px;padding:4px 8px}
+.bnav a{display:flex;flex-direction:column;align-items:center;padding:7px 0;border-radius:16px;font-size:12px;text-decoration:none;color:var(--mute)}.bnav a span{font-size:20px}
+.bnav a[aria-current=page]{background:var(--soft);color:var(--brand)}
+.top{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:10px 18px;background:var(--card);border-bottom:2px solid var(--line)}
+.brand{font-size:20px;font-weight:700;text-decoration:none;color:var(--ink)}.brand small{font-size:12px;color:var(--mute);font-weight:500}
+.tnav{display:flex;gap:6px}.tnav a{text-decoration:none;padding:6px 14px;border-radius:99px}.tnav a[aria-current=page]{background:var(--soft)}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:14px 0}
+.stat .val{font-size:30px;font-weight:700}.stat:nth-child(1){border-top:6px solid var(--c1)}.stat:nth-child(2){border-top:6px solid var(--c3)}.stat:nth-child(3){border-top:6px solid var(--c4)}.stat:nth-child(4){border-top:6px solid var(--c2)}
+.scroll{overflow-x:auto}.tbl{width:100%;border-collapse:collapse;background:var(--card);border:2px solid var(--line)}
+.tbl th,.tbl td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--line);font-size:14px;vertical-align:middle}.tbl th{background:var(--soft);color:var(--mute)}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.actions .btn{width:auto}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:0 16px}
+.filters{display:flex;gap:10px;flex-wrap:wrap;align-items:end;margin:12px 0}.filters>div{flex:1;min-width:150px}.filters .btn{width:auto}
+.lrow{display:grid;grid-template-columns:2fr 1.2fr 1fr .8fr .8fr;gap:8px;margin-bottom:8px}.lrow input{min-height:42px}
+.lhead{font-size:12px;font-weight:700;color:var(--mute)}
+@media (max-width:640px){.lrow{grid-template-columns:1fr 1fr}.lhead{display:none}}
+.res{padding:12px 0;border-top:1px solid var(--line)}.res:first-child{border-top:0}.rhead{display:flex;justify-content:space-between;gap:8px;align-items:baseline}
+.val{font-weight:700;font-size:20px}.val small{font-weight:500;font-size:13px;color:var(--mute)}
+.bar{position:relative;height:10px;border-radius:9px;margin:10px 0 4px;background:linear-gradient(90deg,var(--lobg) 0 25%,var(--okbg) 25% 75%,var(--hibg) 75% 100%)}
+.bar b{position:absolute;top:-4px;width:6px;height:16px;border-radius:3px;background:var(--ink);transform:translateX(-50%);border:2px solid var(--card)}
+.paper{background:#fff;color:#1d1d2b;border-radius:14px;border:2px solid var(--line);padding:20px 18px;box-shadow:0 6px 0 color-mix(in srgb,var(--brand) 18%,transparent)}
+.paper h4{font-family:Fredoka,sans-serif;font-size:14px;letter-spacing:.08em;color:#6c4bf4}
+.paper .lh{display:flex;justify-content:space-between;gap:8px;border-bottom:2px solid #6c4bf4;padding-bottom:10px;margin-bottom:14px;font-size:12px;color:#6a6288}
+.paper h2{text-align:center;font-size:18px;margin:6px 0 2px;color:#1d1d2b}
+.pr{display:grid;grid-template-columns:130px 1fr;gap:7px 12px;font-size:14px;margin-top:12px}.pr span{color:#6a6288}.pr b{font-weight:600;word-break:break-word}
+.sg{margin-top:22px;text-align:right;font-size:14px}
+.m3{grid-template-columns:repeat(3,1fr)}.m3 .tile{align-items:center;text-align:center;min-height:98px;padding:10px 4px;gap:6px;font-size:13px;line-height:1.25}.m3 .tile .ic{width:42px;height:42px}
+@media (prefers-reduced-motion:no-preference){main>*{animation:in .2s ease-out}@keyframes in{from{opacity:.4;transform:translateY(4px)}}}
+@media print{.noprint,.bnav,.top{display:none!important}body{background:#fff}#app{max-width:none}main{padding:0}.paper,.card{box-shadow:none}}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+(function(){
+'use strict';
+const KEY='sehatlab-nakes-v1';
+const POLI={'Poli Umum':['dr. Ayu Pratiwi'],'Penyakit Dalam':['dr. Bagus Wirawan, Sp.PD'],'Anak':['dr. Citra Dewi, Sp.A'],'Kandungan':['dr. Dewi Anggraini, Sp.OG'],'Jantung':['dr. Eko Santoso, Sp.JP'],'Gigi':['dr. Fitri Handayani, Sp.KG']};
+const JAM=['08.00','09.30','11.00','13.30','15.00'],BAYAR=['Umum','BPJS Kesehatan','Asuransi swasta'],JAB=['Dokter','Perawat','Analis Laboratorium','Radiografer','Bidan','Petugas Pendaftaran'],STAT=['menunggu','dipanggil','selesai','batal'],JK=['Perempuan','Laki-laki'],GOL=['A','B','AB','O'],RADIO=['Rontgen Thorax PA','USG Abdomen','CT Scan Kepala','Lainnya'];
+const LABT={'Hematologi Rutin':[['Hemoglobin','g/dL',12,16],['Leukosit','×10³/µL',4,10],['Trombosit','×10³/µL',150,400],['Hematokrit','%',36,46],['Eritrosit','×10⁶/µL',4,5.5]],'Kimia Klinik':[['Glukosa puasa','mg/dL',70,100],['Kolesterol total','mg/dL',null,200],['SGPT (ALT)','U/L',null,35],['Ureum','mg/dL',15,40],['Kreatinin','mg/dL',0.6,1.1]],'Urinalisis':[['pH urine','',4.5,8],['Berat jenis','',1.005,1.03],['Leukosit sedimen','/LPB',null,5]]};
+const DOCT={rujukan:{t:'Surat Rujukan',pre:'RJK',intro:'Dengan ini kami merujuk pasien berikut untuk pemeriksaan lanjutan.',note:'Surat berlaku 90 hari untuk satu kali kunjungan.',f:[['dokter','Dokter pemeriksa','text'],['diagnosis','Diagnosis','text'],['poli','Dirujuk ke poli','text'],['rs','Rumah sakit tujuan','text'],['alasan','Alasan rujukan','area']]},
+kontrol:{t:'Surat Kontrol',pre:'KTL',intro:'Pasien berikut dijadwalkan untuk kontrol ulang.',note:'Bawa surat ini saat kontrol.',f:[['dokter','Dokter','text'],['poli','Poli','text'],['tgl_kontrol','Tanggal kontrol','date'],['jam','Jam kontrol','text'],['catatan','Catatan','area']]},
+sks:{t:'Surat Keterangan Sakit',pre:'SKS',intro:'Menerangkan bahwa pasien di bawah ini memerlukan istirahat karena sakit.',note:'Surat ini dibuat untuk digunakan sebagaimana mestinya.',f:[['dokter','Dokter','text'],['diagnosis','Diagnosis','text'],['hari','Lama istirahat (hari)','number'],['mulai','Mulai tanggal','date']]}};
+const EDU=[['Persiapan sebelum tes darah','Prosedur','Sebagian pemeriksaan butuh puasa, misalnya glukosa dan profil lipid. Ikuti instruksi pada surat pengantar. Air putih tetap boleh diminum. Beri tahu petugas jika Anda sedang minum obat atau suplemen.'],['Membaca hasil hematologi','Hasil lab','Hemoglobin rendah dapat menandakan anemia, sedangkan leukosit tinggi sering muncul saat infeksi. Nilai rujukan berbeda antar laboratorium, usia, dan jenis kelamin. Hasil di luar rujukan bukan diagnosis, konsultasikan dengan tenaga kesehatan.'],['Mengenali gejala demam berdarah','Penyakit','Demam tinggi mendadak 2–7 hari dapat disertai nyeri kepala, nyeri belakang mata, dan nyeri otot. Segera ke fasilitas kesehatan bila ada muntah terus-menerus, nyeri perut hebat, atau perdarahan.'],['Cuci tangan yang benar','Pencegahan','Cuci tangan dengan sabun dan air mengalir minimal 20 detik: telapak, punggung tangan, sela jari, dan kuku. Ini menurunkan risiko diare dan infeksi saluran napas.']];
+
+/* ---------- util ---------- */
+const $=s=>document.querySelector(s);
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const iso=d=>new Date(d.getTime()-d.getTimezoneOffset()*6e4).toISOString().slice(0,10);
+const today=()=>iso(new Date());
+const addDays=(s,n)=>{const d=new Date(s+'T00:00');d.setDate(d.getDate()+n);return iso(d)};
+const fd=s=>{const d=new Date((s||'')+'T00:00');return isNaN(d)?(s||'-'):d.toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'})};
+const validDate=s=>/^\d{4}-\d{2}-\d{2}$/.test(s||'')&&!isNaN(new Date(s+'T00:00'));
+const num=s=>{const t=String(s).trim().replace(',','.');return /^-?\d+(\.\d+)?$/.test(t)?parseFloat(t):null};
+const g=x=>String(+x.toPrecision(6));
+async function hash(p,s){try{const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s+p));return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')}catch(e){let h=5381;for(const c of s+p)h=(h*33^c.charCodeAt(0))>>>0;return 'x'+h}}
+const judge=(v,lo,hi)=>{const f=lo!=null&&v<lo?'lo':hi!=null&&v>hi?'hi':'ok';let p=50;if(lo!=null&&hi!=null&&hi>lo)p=25+(v-lo)/(hi-lo)*50;else if(hi)p=10+v/hi*65;else if(lo)p=25+(v-lo)/(lo*.5)*50;return[f,Math.round(Math.max(3,Math.min(97,p))*10)/10]};
+const rtxt=(lo,hi,u)=>lo==null&&hi==null?'-':((lo==null?'≤ '+g(hi):hi==null?'≥ '+g(lo):g(lo)+' – '+g(hi))+' '+u).trim();
+const mkItem=(n,v,u,lo,hi)=>{const[f,p]=judge(v,lo,hi);return{n,v:g(v),u,lo,hi,f,p,r:rtxt(lo,hi,u)}};
+const FL={ok:'Normal',lo:'Rendah',hi:'Tinggi'};
+
+/* ---------- data ---------- */
+let DB=null,SESS=null,mem={};
+const store={get(k){try{return localStorage.getItem(k)}catch(e){return mem[k]||null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){mem[k]=v}},del(k){try{localStorage.removeItem(k)}catch(e){delete mem[k]}}};
+const storeOK=(()=>{try{localStorage.setItem('__t','1');localStorage.removeItem('__t');return true}catch(e){return false}})();
+const WARN='<div class="note err" role="alert">Penyimpanan browser tidak tersedia di tampilan ini, jadi akun dan profil tidak akan tersimpan setelah halaman ditutup. Buka lewat link yang dibagikan, atau unduh filenya lalu buka di browser.</div>';
+const save=()=>store.set(KEY,JSON.stringify(DB));
+const nid=()=>++DB.n;
+async function seed(){
+ const mk=async(email,role,nama,jabatan)=>{const salt=Math.random().toString(36).slice(2);return{email,role,nama,jabatan,salt,pw:await hash('demo12345',salt)}};
+ DB={n:0,users:[await mk('nakes@demo.id','nakes','Ni Made Sari, A.Md.AK','Analis Laboratorium'),await mk('pasien@demo.id','pasien','Siti Aminah')],patients:[],regs:[],labs:[],docs:[]};
+ const t=today(),pid=newPatient({uid:'pasien@demo.id',email:'pasien@demo.id',nama:'Siti Aminah',tgl:'1998-05-14',jk:'Perempuan',tel:'0812-3456-7890',alamat:'Jl. Contoh No. 12, Kota Contoh',gol:'O'});
+ const lab=(jenis,vals,ago)=>DB.labs.push({id:nid(),pid,kat:'Lab',jenis,tgl:addDays(t,-ago),catatan:'',items:LABT[jenis].map((x,i)=>mkItem(x[0],vals[i],x[1],x[2],x[3]))});
+ lab('Hematologi Rutin',[11.2,11.9,265,38,4.6],3);lab('Kimia Klinik',[108,187,24,28,0.7],3);
+ DB.labs.push({id:nid(),pid,kat:'Radiologi',jenis:'Rontgen Thorax PA',tgl:addDays(t,-2),catatan:'Cor dan pulmo dalam batas normal.',items:[]});
+ DB.docs.push({id:nid(),pid,jenis:'kontrol',no:'KTL/'+t.slice(0,4)+'/0001',tgl:t,rows:[['Tanggal terbit',fd(t)],['Dokter','dr. Bagus Wirawan, Sp.PD'],['Poli','Penyakit Dalam'],['Tanggal kontrol',fd(addDays(t,7))],['Jam kontrol','09.30'],['Catatan','Bawa hasil laboratorium terbaru']],ttd:'Ni Made Sari, A.Md.AK',jab:'Analis Laboratorium'});
+ DB.regs.push({id:nid(),pid,poli:'Penyakit Dalam',dokter:'dr. Bagus Wirawan, Sp.PD',tgl:addDays(t,1),jam:'09.30',keluhan:'Kontrol hasil laboratorium',bayar:'Umum',no:1,status:'menunggu'});
+ migrate();save();
+}
+function newPatient(o){const id=nid(),rm='RM-'+String(DB.patients.length+1).padStart(6,'0');DB.patients.push({id,rm,uid:null,email:'',nama:'',tgl:'',jk:'',tel:'',alamat:'',gol:'',...o});return id}
+const me=()=>DB.users.find(u=>u.email===SESS);
+const myp=()=>DB.patients.find(p=>p.uid===SESS);
+const pat=id=>DB.patients.find(p=>p.id===+id);
+const profOk=p=>!!(p&&p.nama&&p.tgl&&p.jk&&p.tel&&p.alamat);
+const byDate=(a,b)=>b.tgl.localeCompare(a.tgl)||b.id-a.id;
+
+/* ---------- state & ui helpers ---------- */
+const S={view:'home',tab:'masuk',arg:null,msg:null,date:today(),stat:'',q:'',cf:'',draft:null,fails:{}};
+const inp=(n,l,v,t,o)=>{o=o||{};return `<label for="${n}">${l}</label><input id="${n}" name="${n}" type="${t||'text'}" value="${esc(v)}" ${o.req===false?'':'required'} ${o.ph?`placeholder="${esc(o.ph)}"`:''} ${o.ro?'readonly':''} ${o.min!=null?`min="${o.min}" max="${o.max}"`:''} ${o.max!=null&&o.min==null?`max="${o.max}"`:''} ${o.inm?`inputmode="${o.inm}"`:''} ${o.ml?`maxlength="${o.ml}"`:''}>`};
+const sel=(n,l,opts,v,req)=>{req=req!==false;return `<label for="${n}">${l}</label><select id="${n}" name="${n}" ${req?'required':''}><option value="">${req?'Pilih '+l.toLowerCase():'(kosongkan)'}</option>${opts.map(o=>`<option ${o===v?'selected':''}>${esc(o)}</option>`).join('')}</select>`};
+const ta=(n,l,v,req,ph)=>`<label for="${n}">${l}</label><textarea id="${n}" name="${n}" ${req===false?'':'required'} placeholder="${esc(ph||'')}">${esc(v)}</textarea>`;
+const chip=s=>`<span class="chip ${({menunggu:'lo',dipanggil:'n',selesai:'ok',batal:'hi'})[s]||'n'}">${s[0].toUpperCase()+s.slice(1)}</span>`;
+const A=(act,v,txt,cls,extra)=>`<a href="#" class="${cls||''}" data-act="${act}" data-v="${esc(v==null?'':v)}" ${extra||''}>${txt}</a>`;
+const flash=(t,m)=>{S.msg={t,m}};
+function go(view,arg){const u=me();S.view=view;S.arg=arg==null?null:arg;S.cf='';clearInterval(S.tmr);S.call=null;S.done=null;S.pickN=null;
+ if(u&&u.role==='pasien'&&!profOk(myp())&&!['home','profil','edu'].includes(view)){S.view='profil';flash('err','Lengkapi profil terlebih dahulu untuk membuka layanan.')}
+ render();scrollTo(0,0)}
+const row=(a,title,sub,right,col)=>`<a href="#" class="row" ${a} style="--a:${col||'var(--brand)'}"><div class="grow"><h3>${title}</h3><div class="mute">${sub}</div></div>${right||''}</a>`;
+function labBody(l,p,staff){return `${A('go',staff?'pt':'lab',"‹ Kembali",'back noprint',staff?`data-id="${p.id}"`:'')}<h1>${esc(l.jenis)}</h1><p class="mute">${fd(l.tgl)} · ${esc(p.nama)} (${p.rm})</p>
+${l.items.length?`<div class="card" style="margin-top:14px">${l.items.map(i=>`<div class="res"><div class="rhead"><span>${esc(i.n)}</span><span class="chip ${i.f}">${FL[i.f]}</span></div><div class="val">${esc(i.v)} <small>${esc(i.u)}</small></div><div class="bar" aria-hidden="true"><b style="left:${i.p}%"></b></div><div class="mute">Rujukan: ${esc(i.r)}</div></div>`).join('')}</div>`:''}
+${l.catatan?`<div class="card" style="margin-top:14px"><h3>${l.kat==='Radiologi'?'Kesan / hasil':'Catatan'}</h3><p>${esc(l.catatan)}</p></div>`:''}
+<p class="note" style="margin-top:14px">Hasil perlu ditafsirkan bersama gejala klinis oleh tenaga kesehatan. Nilai rujukan dapat berbeda antar laboratorium.</p>
+<div class="actions noprint"><button class="btn" data-act="pdf" data-v="lab" data-id="${l.id}">Unduh PDF</button><button class="btn ghost" data-act="print">Cetak</button>
+${staff?`<button class="btn ghost" data-act="editlab" data-id="${l.id}">Ubah</button>`+(S.cf==='dl'+l.id?`<button class="btn danger" data-act="dellab" data-id="${l.id}">Yakin hapus?</button>`:`<button class="btn danger" data-act="ask" data-v="dl${l.id}">Hapus</button>`):''}</div>`}
+function docBody(d,p,staff){const T=DOCT[d.jenis];return `${A('go',staff?'pt':'docs','‹ Kembali','back noprint',staff?`data-id="${p.id}"`:'')}
+<div class="paper"><div class="lh"><div><h4>RS SEHATLAB</h4>Layanan Kesehatan Terpadu</div><div class="right">No. ${esc(d.no)}</div></div><h2>${T.t}</h2><p style="font-size:14px;margin-top:8px">${T.intro}</p>
+<div class="pr"><span>Nama pasien</span><b>${esc(p.nama)}</b><span>No. rekam medis</span><b>${p.rm}</b><span>Tanggal lahir</span><b>${p.tgl?fd(p.tgl):'-'}</b><span>Jenis kelamin</span><b>${esc(p.jk||'-')}</b><span>Alamat</span><b>${esc(p.alamat||'-')}</b>${d.rows.map(r=>`<span>${esc(r[0])}</span><b>${esc(r[1])}</b>`).join('')}</div>
+<p style="font-size:13px;margin-top:12px">${T.note}</p><div class="sg">${esc(d.jab)}<br><br><br><b>${esc(d.ttd)}</b></div></div>
+<div class="actions noprint"><button class="btn" data-act="pdf" data-v="doc" data-id="${d.id}">Unduh PDF</button><button class="btn ghost" data-act="print">Cetak</button></div>`}
+
+/* ---------- patient views ---------- */
+const PV={};
+PV.home=()=>{const p=myp(),ok=profOk(p),reg=DB.regs.filter(r=>r.pid===p.id&&['menunggu','dipanggil'].includes(r.status)&&r.tgl>=today()).sort((a,b)=>a.tgl.localeCompare(b.tgl)||a.jam.localeCompare(b.jam))[0],lab=DB.labs.filter(l=>l.pid===p.id).sort(byDate)[0];
+ const T=[['konsul','Konsultasi','💬','#6c4bf4'],['vc','Video Call Spesialis','🎥','#e0357f'],['reg','Pendaftaran Pelayanan','📅','#d68a00'],['penunjang','Lab & Radiologi','🔬','#1c78d6'],['mcu','Medical Check Up','❤️','#e0482f'],['rs','Informasi Rumah Sakit','🏥','#0e9f80'],['va','Virtual Account','💳','#4c9a12'],['shop','E-Commerce','🛍️','#e06a10'],['lab','Hasil Laboratorium','🧪','#3f4ed8'],['docs','Rekam Medis & Dokumen','📄','#0f8a9d'],['edu','Edukasi','📚','#12b48f'],['profil','Profil','👤','#8a5cf6']];
+ return `<div class="hero"><p>Selamat datang 👋</p><h1>${esc(p.nama)}</h1><p>No. RM ${p.rm}</p></div>
+${ok?'':`<a href="#" class="row warn" data-act="go" data-v="profil"><div class="grow"><h3>Lengkapi profil Anda</h3><div class="mute">Wajib diisi lengkap agar layanan kesehatan terbuka.</div></div><span class="chip lo">Wajib</span></a>`}
+<h2 style="margin-top:0">Layanan</h2><div class="menu m3">${T.map(t=>`<a href="#" class="tile ${ok||['edu','profil'].includes(t[0])?'':'lock'}" data-act="go" data-v="${t[0]}" style="--t:${t[3]}"><span class="ic">${t[2]}</span><b>${t[1]}</b></a>`).join('')}</div>
+${reg?`<h2>Kunjungan berikutnya</h2>${row('data-act="go" data-v="reg"',esc(reg.poli)+' · '+esc(reg.dokter),fd(reg.tgl)+', '+reg.jam+' · Antrean '+reg.no,chip(reg.status),'var(--c3)')}`:''}
+${lab?`<h2>Hasil terbaru</h2>${row(`data-act="go" data-v="labv" data-id="${lab.id}"`,esc(lab.jenis),fd(lab.tgl),'<span class="chip n">Lihat</span>','var(--c4)')}`:''}`};
+PV.profil=()=>{const p=myp(),u=me(),d=S.draft||p;
+ return `<h1>Profil</h1>${profOk(p)?'':'<p class="note" style="margin-top:12px">Wajib dilengkapi sebelum Anda dapat mengakses layanan kesehatan. Isi semua kolom (golongan darah boleh dikosongkan), lalu tekan Simpan.</p>'}<p class="mute">No. rekam medis ${p.rm}</p>
+<form data-form="profil"><div class="grid2"><div>${inp('nama','Nama lengkap',d.nama)}${inp('tgl','Tanggal lahir',d.tgl,'date',{max:today()})}${sel('jk','Jenis kelamin',JK,d.jk)}</div><div>${inp('tel','Nomor telepon',d.tel,'tel',{ph:'Contoh: 0812-3456-7890'})}${inp('email','Email',u.email,'email',{ro:true,req:false})}${sel('gol','Golongan darah',GOL,d.gol,false)}</div></div>
+${ta('alamat','Alamat',d.alamat,true,'Jalan, nomor rumah, kelurahan, kecamatan, kota')}<div class="actions"><button class="btn" style="min-width:200px">Simpan</button></div></form>
+<button class="btn danger" data-act="logout">Keluar</button>`};
+PV.reg=()=>{const p=myp(),rows=DB.regs.filter(r=>r.pid===p.id).sort(byDate);
+ return `<h1>Pendaftaran</h1><p class="mute" style="margin:4px 0 14px">Daftar kunjungan rawat jalan tanpa antre.</p><button class="btn" data-act="go" data-v="regnew">+ Daftar kunjungan baru</button><h2>Riwayat pendaftaran</h2><div class="stack">
+${rows.map(r=>`<div class="card"><div class="row" style="border:0;padding:0"><div class="grow"><h3>${esc(r.poli)}</h3><div class="mute">${esc(r.dokter)}<br>${fd(r.tgl)}, ${r.jam} · ${esc(r.bayar)}</div></div><div class="right"><div class="val">${r.no}</div><div class="mute">antrean</div></div></div><div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px">${chip(r.status)}${r.status==='menunggu'?(S.cf==='rg'+r.id?`<button class="btn danger sm" data-act="cancel" data-id="${r.id}">Yakin batalkan?</button>`:`<button class="btn danger sm" data-act="ask" data-v="rg${r.id}">Batalkan</button>`):''}</div></div>`).join('')||'<p class="mute">Belum ada pendaftaran.</p>'}</div>`};
+PV.regnew=()=>{const d=S.draft||{};return `${A('go','reg','‹ Kembali','back')}<h1>Daftar kunjungan</h1><form data-form="regnew">${sel('poli','Poli',Object.keys(POLI),d.poli)}
+<label for="dokter">Dokter</label><select id="dokter" name="dokter" required>${(POLI[d.poli]||[]).length?POLI[d.poli].map(x=>`<option ${x===d.dokter?'selected':''}>${esc(x)}</option>`).join(''):'<option value="">Pilih poli dahulu</option>'}</select>
+${inp('tgl','Tanggal kunjungan',d.tgl,'date',{min:today(),max:addDays(today(),60)})}${sel('jam','Jam',JAM,d.jam)}${sel('bayar','Cara bayar',BAYAR,d.bayar)}${ta('keluhan','Keluhan (opsional)',d.keluhan,false,'Contoh: demam sejak 3 hari')}<div class="actions"><button class="btn">Daftar sekarang</button></div></form>`};
+PV.lab=()=>{const p=myp(),rows=DB.labs.filter(l=>l.pid===p.id).sort(byDate);
+ return `<h1>Hasil Laboratorium</h1><p class="mute" style="margin:4px 0 14px">Hasil pemeriksaan yang diinput tenaga kesehatan.</p><div class="stack">${rows.map(l=>row(`data-act="go" data-v="labv" data-id="${l.id}"`,esc(l.jenis),fd(l.tgl)+' · '+l.kat,'<span class="chip n">Lihat</span>',l.kat==='Radiologi'?'var(--c5)':'var(--c4)')).join('')||'<p class="mute">Belum ada hasil pemeriksaan. Hasil akan muncul di sini setelah diinput oleh petugas laboratorium.</p>'}</div>`};
+PV.labv=()=>{const p=myp(),l=DB.labs.find(x=>x.id===+S.arg&&x.pid===p.id);return l?labBody(l,p,false):PV.lab()};
+PV.docs=()=>{const p=myp(),rows=DB.docs.filter(d=>d.pid===p.id).sort(byDate);
+ return `<h1>Dokumen Medis</h1><p class="mute" style="margin:4px 0 14px">Surat rujukan, surat kontrol, dan surat keterangan sakit.</p><div class="stack">${rows.map(d=>row(`data-act="go" data-v="docv" data-id="${d.id}"`,DOCT[d.jenis].t,esc(d.no)+' · '+fd(d.tgl),'<span class="chip n">Buka</span>','var(--c5)')).join('')||'<p class="mute">Belum ada dokumen. Dokumen diterbitkan oleh tenaga kesehatan.</p>'}</div>`};
+PV.docv=()=>{const p=myp(),d=DB.docs.find(x=>x.id===+S.arg&&x.pid===p.id);return d?docBody(d,p,false):PV.docs()};
+PV.edu=()=>`<h1>Edukasi Kesehatan</h1><div class="stack" style="margin-top:14px">${EDU.map((a,i)=>`<div class="card" style="border-left:7px solid var(--c${i%5+1})"><span class="chip n">${a[1]}</span><h3 style="margin:8px 0 4px">${a[0]}</h3><p>${a[2]}</p></div>`).join('')}</div>`;
+
+/* ---------- staff views ---------- */
+const NV={};
+NV.home=()=>{const t=today(),q=DB.regs.filter(r=>r.tgl===t),st={antre:q.filter(r=>['menunggu','dipanggil'].includes(r.status)).length,sel:q.filter(r=>r.status==='selesai').length,pas:DB.patients.length,lab:DB.labs.filter(l=>l.tgl===t).length};
+ return `<h1>Dashboard</h1><p class="mute">Ringkasan hari ini, ${fd(t)}.</p><div class="stats"><div class="card stat"><div class="mute">Antrean aktif</div><div class="val">${st.antre}</div></div><div class="card stat"><div class="mute">Selesai dilayani</div><div class="val">${st.sel}</div></div><div class="card stat"><div class="mute">Total pasien</div><div class="val">${st.pas}</div></div><div class="card stat"><div class="mute">Hasil lab hari ini</div><div class="val">${st.lab}</div></div></div>
+<div class="actions"><button class="btn" data-act="go" data-v="ptform">+ Pasien baru</button><button class="btn ghost" data-act="go" data-v="pts">Cari pasien</button><button class="btn ghost" data-act="go" data-v="queue">Kelola antrean</button></div>
+${codeCard()}<h2>Antrean hari ini</h2><div class="scroll"><table class="tbl"><tr><th>Poli</th><th>No.</th><th>Pasien</th><th>Jam</th><th>Status</th></tr>${q.sort((a,b)=>a.poli.localeCompare(b.poli)||a.no-b.no).slice(0,8).map(r=>{const p=pat(r.pid);return `<tr><td>${esc(r.poli)}</td><td>${r.no}</td><td>${A('go','pt',esc(p.nama),'',`data-id="${p.id}"`)}<div class="mute">${p.rm}</div></td><td>${r.jam}</td><td>${chip(r.status)}</td></tr>`}).join('')||'<tr><td colspan="5" class="mute">Belum ada pendaftaran hari ini.</td></tr>'}</table></div>
+<h2>Pasien terbaru</h2><div class="stack">${DB.patients.slice(-5).reverse().map(p=>row(`data-act="go" data-v="pt" data-id="${p.id}"`,esc(p.nama),p.rm)).join('')||'<p class="mute">Belum ada pasien.</p>'}</div>`};
+NV.queue=()=>{const rows=DB.regs.filter(r=>r.tgl===S.date&&(!S.stat||r.status===S.stat)).sort((a,b)=>a.poli.localeCompare(b.poli)||a.no-b.no);
+ return `<h1>Antrean pendaftaran</h1><form class="filters" data-form="qfilter"><div>${inp('date','Tanggal',S.date,'date')}</div><div><label for="stat">Status</label><select id="stat" name="stat"><option value="">Semua</option>${STAT.map(s=>`<option value="${s}" ${s===S.stat?'selected':''}>${s[0].toUpperCase()+s.slice(1)}</option>`).join('')}</select></div><button class="btn">Tampilkan</button></form>
+<div class="scroll"><table class="tbl"><tr><th>Poli / dokter</th><th>No.</th><th>Pasien</th><th>Jam</th><th>Keluhan</th><th>Status</th><th>Ubah status</th></tr>${rows.map(r=>{const p=pat(r.pid);return `<tr><td>${esc(r.poli)}<div class="mute">${esc(r.dokter)}</div></td><td><b>${r.no}</b></td><td>${A('go','pt',esc(p.nama),'',`data-id="${p.id}"`)}<div class="mute">${p.rm} · ${esc(p.tel||'-')}</div></td><td>${r.jam}</td><td>${esc(r.keluhan||'-')}</td><td>${chip(r.status)}</td><td><select data-chg="status" data-id="${r.id}" style="min-height:38px;width:auto" aria-label="Ubah status">${STAT.map(s=>`<option value="${s}" ${s===r.status?'selected':''}>${s[0].toUpperCase()+s.slice(1)}</option>`).join('')}</select></td></tr>`}).join('')||'<tr><td colspan="7" class="mute">Tidak ada pendaftaran.</td></tr>'}</table></div>${bkTbl()}`};
+NV.pts=()=>{const q=S.q.toLowerCase(),rows=DB.patients.filter(p=>!q||[p.nama,p.rm,p.tel].some(x=>(x||'').toLowerCase().includes(q))).sort((a,b)=>a.nama.localeCompare(b.nama));
+ return `<h1>Data pasien</h1><form class="filters" data-form="psearch"><div>${inp('q','Cari nama, no. RM, atau telepon',S.q,'search',{req:false})}</div><button class="btn">Cari</button><button type="button" class="btn ghost" data-act="go" data-v="ptform">+ Pasien baru</button></form>
+<div class="scroll"><table class="tbl"><tr><th>No. RM</th><th>Nama</th><th>Tgl lahir</th><th>JK</th><th>Telepon</th><th>Akun</th></tr>${rows.map(p=>`<tr><td>${p.rm}</td><td>${A('go','pt',esc(p.nama),'',`data-id="${p.id}"`)}</td><td>${p.tgl?fd(p.tgl):'-'}</td><td>${p.jk||'-'}</td><td>${esc(p.tel||'-')}</td><td>${p.uid?'<span class="chip ok">Terhubung</span>':'<span class="chip n">Tanpa akun</span>'}</td></tr>`).join('')||'<tr><td colspan="6" class="mute">Tidak ada pasien ditemukan.</td></tr>'}</table></div>`};
+NV.ptform=()=>{const p=S.arg?pat(S.arg):{},d=S.draft||p;
+ return `${A('go',S.arg?'pt':'pts','‹ Kembali','back',S.arg?`data-id="${S.arg}"`:'')}<h1>${S.arg?'Ubah data pasien':'Pasien baru'}</h1>${p.rm?`<p class="mute">No. rekam medis ${p.rm}</p>`:''}
+<form data-form="ptform"><div class="grid2"><div>${inp('nama','Nama lengkap',d.nama)}${inp('tgl','Tanggal lahir',d.tgl,'date',{max:today()})}${sel('jk','Jenis kelamin',JK,d.jk)}</div><div>${inp('tel','Nomor telepon',d.tel,'tel',{ph:'Contoh: 0812-3456-7890'})}${inp('email','Email',d.email,'email',{req:false,ro:!!p.uid})}${sel('gol','Golongan darah',GOL,d.gol,false)}</div></div>
+${ta('alamat','Alamat',d.alamat,true,'Jalan, nomor rumah, kelurahan, kecamatan, kota')}<div class="actions"><button class="btn">Simpan</button></div></form>`};
+NV.pt=()=>{const p=pat(S.arg);if(!p)return NV.pts();const L=DB.labs.filter(x=>x.pid===p.id).sort(byDate),D=DB.docs.filter(x=>x.pid===p.id).sort(byDate),R=DB.regs.filter(x=>x.pid===p.id).sort(byDate).slice(0,10),k=t=>`<span style="color:var(--mute)">${t}</span>`;
+ return `${A('go','pts','‹ Semua pasien','back')}<h1>${esc(p.nama)}</h1><p class="mute">${p.rm}${p.uid?' · akun pasien terhubung':' · belum memiliki akun (tautkan lewat No. RM + tanggal lahir saat daftar)'}</p>
+<div class="card" style="margin-top:12px"><div class="pr" style="color:inherit">${k('Tanggal lahir')}<b>${p.tgl?fd(p.tgl):'-'}</b>${k('Jenis kelamin')}<b>${p.jk||'-'}</b>${k('Telepon')}<b>${esc(p.tel||'-')}</b>${k('Email')}<b>${esc(p.email||'-')}</b>${k('Golongan darah')}<b>${p.gol||'-'}</b>${k('Alamat')}<b>${esc(p.alamat||'-')}</b></div></div>
+<div class="actions"><button class="btn ghost" data-act="go" data-v="ptform" data-id="${p.id}">Ubah data</button><button class="btn" data-act="go" data-v="labnew" data-id="${p.id}">+ Input hasil pemeriksaan</button><button class="btn" data-act="go" data-v="docnew" data-id="${p.id}">+ Buat surat</button></div>
+<h2>Hasil pemeriksaan</h2><div class="scroll"><table class="tbl"><tr><th>Tanggal</th><th>Pemeriksaan</th><th>Kategori</th><th></th></tr>${L.map(l=>`<tr><td>${fd(l.tgl)}</td><td>${esc(l.jenis)}</td><td>${l.kat}</td><td>${A('go','labv','Buka','',`data-id="${l.id}"`)}</td></tr>`).join('')||'<tr><td colspan="4" class="mute">Belum ada hasil.</td></tr>'}</table></div>
+<h2>Dokumen</h2><div class="scroll"><table class="tbl"><tr><th>Tanggal</th><th>Jenis</th><th>Nomor</th><th></th></tr>${D.map(d=>`<tr><td>${fd(d.tgl)}</td><td>${DOCT[d.jenis].t}</td><td>${esc(d.no)}</td><td>${A('go','docv','Buka','',`data-id="${d.id}"`)}</td></tr>`).join('')||'<tr><td colspan="4" class="mute">Belum ada dokumen.</td></tr>'}</table></div>
+<h2>Pendaftaran terakhir</h2><div class="scroll"><table class="tbl"><tr><th>Tanggal</th><th>Poli</th><th>No.</th><th>Status</th></tr>${R.map(r=>`<tr><td>${fd(r.tgl)}, ${r.jam}</td><td>${esc(r.poli)}</td><td>${r.no}</td><td>${chip(r.status)}</td></tr>`).join('')||'<tr><td colspan="4" class="mute">Belum ada pendaftaran.</td></tr>'}</table></div>`};
+NV.labnew=()=>{const a=S.arg,p=pat(a.pid||a);
+ if(!a.jenis)return `${A('go','pt','‹ '+esc(p.nama),'back','data-id="'+p.id+'"')}<h1>Input hasil pemeriksaan</h1><p class="mute" style="margin:4px 0 14px">Pasien: ${esc(p.nama)} (${p.rm}). Pilih jenis pemeriksaan.</p><div class="menu">${Object.keys(LABT).map(j=>`<a href="#" class="tile" data-act="labpick" data-v="${j}" style="--t:#1c78d6"><span class="ic">🧪</span><b>${j}</b></a>`).join('')}<a href="#" class="tile" data-act="labpick" data-v="Radiologi" style="--t:#ee3d8f"><span class="ic">🩻</span><b>Radiologi</b></a></div>`;
+ const rec=a.rid?DB.labs.find(l=>l.id===a.rid):null,rad=a.jenis==='Radiologi',d=S.draft||{};
+ const f=x=>x==null?'':g(x);
+ let rows=rec?rec.items.map(i=>({n:i.n,u:i.u,lo:f(i.lo),hi:f(i.hi),v:i.v})):(LABT[a.jenis]||[]).map(x=>({n:x[0],u:x[1],lo:f(x[2]),hi:f(x[3]),v:''}));
+ rows=rows.concat([1,2,3].map(()=>({n:'',u:'',lo:'',hi:'',v:''})));
+ if(S.draft&&!rad)rows=rows.map((r,i)=>({n:d['n'+i]||'',u:d['u'+i]||'',lo:d['lo'+i]||'',hi:d['hi'+i]||'',v:d['v'+i]||''}));
+ const tg=d.tgl||(rec?rec.tgl:today());
+ return `${A('go','pt','‹ '+esc(p.nama),'back','data-id="'+p.id+'"')}<h1>${rec?'Ubah':'Input'} ${rad?'hasil radiologi':a.jenis}</h1><p class="mute">Pasien: ${esc(p.nama)} (${p.rm}). Hasil langsung tampil di akun pasien setelah disimpan.</p>
+<form data-form="lab" style="margin-top:8px">${inp('tgl','Tanggal pemeriksaan',tg,'date',{max:today()})}
+${rad?`${sel('pem','Pemeriksaan',RADIO,d.pem||(rec?(RADIO.includes(rec.jenis)?rec.jenis:'Lainnya'):''))}${inp('lain','Nama pemeriksaan (jika Lainnya)',d.lain||(rec&&!RADIO.includes(rec.jenis)?rec.jenis:''),'text',{req:false})}${ta('catatan','Kesan / hasil',d.catatan||(rec?rec.catatan:''),true,'Contoh: Cor dan pulmo dalam batas normal.')}`
+:`<h2>Nilai pemeriksaan</h2><p class="mute" style="margin-bottom:8px">Kosongkan nilai untuk parameter yang tidak diperiksa. Batas rujukan dapat disesuaikan. Tiga baris terakhir untuk parameter tambahan.</p>
+<div class="lrow lhead"><span>Parameter</span><span>Nilai</span><span>Satuan</span><span>Rujukan min</span><span>Rujukan maks</span></div>
+${rows.map((r,i)=>`<div class="lrow"><input name="n${i}" value="${esc(r.n)}" placeholder="Parameter" aria-label="Parameter"><input name="v${i}" value="${esc(r.v)}" inputmode="decimal" placeholder="Nilai" aria-label="Nilai ${esc(r.n)}"><input name="u${i}" value="${esc(r.u)}" placeholder="Satuan" aria-label="Satuan"><input name="lo${i}" value="${esc(r.lo)}" inputmode="decimal" placeholder="min" aria-label="Rujukan minimum"><input name="hi${i}" value="${esc(r.hi)}" inputmode="decimal" placeholder="maks" aria-label="Rujukan maksimum"></div>`).join('')}
+${ta('catatan','Catatan (opsional)',d.catatan||(rec?rec.catatan:''),false)}`}
+<div class="actions"><button class="btn">Simpan hasil</button></div></form>`};
+NV.labv=()=>{const l=DB.labs.find(x=>x.id===+S.arg);return l?labBody(l,pat(l.pid),true):NV.pts()};
+NV.docnew=()=>{const a=S.arg,p=pat(a.pid||a);
+ if(!a.jenis)return `${A('go','pt','‹ '+esc(p.nama),'back','data-id="'+p.id+'"')}<h1>Buat surat</h1><p class="mute" style="margin:4px 0 14px">Pasien: ${esc(p.nama)} (${p.rm}). Pilih jenis surat.</p><div class="menu">${Object.entries(DOCT).map(([k,s])=>`<a href="#" class="tile" data-act="docpick" data-v="${k}" style="--t:#e0357f"><span class="ic">📄</span><b>${s.t}</b></a>`).join('')}</div>`;
+ const T=DOCT[a.jenis],d=S.draft||{};
+ return `${A('go','pt','‹ '+esc(p.nama),'back','data-id="'+p.id+'"')}<h1>${T.t}</h1><p class="mute">Pasien: ${esc(p.nama)} (${p.rm}). Surat langsung tampil di akun pasien.</p><form data-form="doc">${inp('tgl','Tanggal terbit',d.tgl||today(),'date')}
+${T.f.map(([k,l,t])=>t==='area'?ta(k,l,d[k]):inp(k,l,d[k],t,t==='number'?{min:1,max:30}:{})).join('')}<div class="actions"><button class="btn">Terbitkan surat</button></div></form>`};
+NV.docv=()=>{const d=DB.docs.find(x=>x.id===+S.arg);return d?docBody(d,pat(d.pid),true):NV.pts()};
+
+/* ---------- auth view ---------- */
+function authV(){const t=S.tab;
+ const tabs=`<div class="seg" role="group" aria-label="Pilih menu">${[['masuk','Masuk'],['pasien','Daftar Pasien'],['nakes','Daftar Nakes']].map(([k,l])=>`<button type="button" data-act="tab" data-v="${k}" aria-pressed="${t===k}">${l}</button>`).join('')}</div>`;
+ const acct=`${inp('email','Email','','email')}${inp('password','Kata sandi'+(t==='masuk'?'':' (minimal 8 karakter)'),'','password')}`;
+ const form=t==='masuk'?`<form data-form="login">${acct}<div class="actions"><button class="btn">Masuk</button></div></form><p class="mute">Coba cepat:</p><div class="actions"><button class="btn ghost sm" data-act="demo" data-v="pasien@demo.id">Pasien demo</button><button class="btn ghost sm" data-act="demo" data-v="nakes@demo.id">Nakes demo</button></div>`
+ :t==='pasien'?`<form data-form="regp">${inp('nama','Nama lengkap','')}${acct}<div class="card" style="margin-top:18px"><h3>Pernah berobat sebelumnya?</h3><p class="mute">Isi untuk menautkan riwayat Anda. Kosongkan jika baru pertama kali.</p>${inp('rm','No. rekam medis','','text',{req:false,ph:'RM-000123'})}${inp('tgl','Tanggal lahir','','date',{req:false})}</div><div class="actions"><button class="btn">Buat akun</button></div></form>`
+ :`<form data-form="regn">${inp('nama','Nama lengkap (beserta gelar)','')}${acct}${sel('jab','Jabatan',JAB,'')}${inp('kode','Kode registrasi (10 angka)','','text',{ph:'10 angka',inm:'numeric',ml:10})}<div class="actions"><button class="btn">Buat akun</button></div></form>`;
+ return `<div class="login"><div class="logo">🧪</div><h1>SehatLab</h1><p class="mute">Layanan untuk pasien dan tenaga kesehatan.</p>${tabs}${form}<p class="mute" style="margin-top:18px">${A('reset',S.cf==='reset'?'ya':'',S.cf==='reset'?'Klik lagi untuk menghapus semua data':'Reset data')}</p></div>`}
+
+/* ---------- render ---------- */
+function render(){const u=SESS&&DB&&me(),app=$('#app');
+ if(!u){SESS=null;document.body.className='';app.innerHTML=`<main>${msgHtml()}${authV()}</main>`;return}
+ document.body.className=u.role;
+ const V=u.role==='nakes'?NV:PV,view=V[S.view]?S.view:'home';
+ const body=V[view]();let nav='';
+ if(u.role==='nakes'){const unread=DB.consults.filter(c=>c.nk===u.email&&c.status!=='selesai'&&c.msgs[c.msgs.length-1].f==='p').length;const on=n=>({home:['home'],queue:['queue'],kons:['kons','konst'],pts:['pts','pt','ptform','labnew','labv','docnew','docv']})[n].includes(view)?'aria-current="page"':'';
+  nav=`<header class="top noprint"><a href="#" class="brand" data-act="go" data-v="home">🧪 SehatLab <small>Tenaga Kesehatan</small></a><nav class="tnav" aria-label="Menu utama"><a href="#" data-act="go" data-v="home" ${on('home')}>Dashboard</a><a href="#" data-act="go" data-v="queue" ${on('queue')}>Antrean</a><a href="#" data-act="go" data-v="kons" ${on('kons')}>Konsultasi${unread?` <span class="chip hi">${unread}</span>`:''}</a><a href="#" data-act="go" data-v="pts" ${on('pts')}>Pasien</a></nav><span class="grow"></span><span class="mute">${esc(u.nama)} · ${esc(u.jabatan)}</span><button class="btn ghost sm" data-act="logout">Keluar</button></header>`}
+ else{const on=(...v)=>v.includes(view)?'aria-current="page"':'';
+  nav=`<nav class="bnav noprint" aria-label="Menu utama"><div><a href="#" data-act="go" data-v="home" ${on('home')}><span>🏠</span>Beranda</a><a href="#" data-act="go" data-v="reg" ${on('reg','regnew')}><span>📅</span>Daftar</a><a href="#" data-act="go" data-v="lab" ${on('lab','labv')}><span>🧪</span>Hasil Lab</a><a href="#" data-act="go" data-v="docs" ${on('docs','docv')}><span>📄</span>Dokumen</a><a href="#" data-act="go" data-v="profil" ${on('profil')}><span>👤</span>Profil</a></div></nav>`}
+ app.innerHTML=(u.role==='nakes'?nav:'')+`<main>${msgHtml()}${body}</main>`+(u.role==='pasien'?nav:'')}
+function msgHtml(){const m=S.msg;S.msg=null;return (storeOK?'':WARN)+(m?`<div class="note ${m.t}" role="alert">${esc(m.m)}</div>`:'')}
+
+/* ---------- pdf & download ---------- */
+function mkPdf(items){const W=595,H=842,M=56,BS=String.fromCharCode(92),pages=[],MAP={'×':'x','–':'-','—':'-','·':'-','µ':'u','³':'^3','⁶':'^6','≤':'<=','≥':'>='};let cs=[],y=H-M;
+ const pe=s=>[...String(s)].map(c=>{if(MAP[c])return MAP[c];const n=c.normalize('NFD')[0],k=n.charCodeAt(0);return k>=32&&k<127?n:''}).join('').split(BS).join(BS+BS).split('(').join(BS+'(').split(')').join(BS+')');
+ const np=()=>{pages.push(cs.join('\n'));cs=[];y=H-M},txt=(f,sz,x,t)=>cs.push('BT /'+f+' '+sz+' Tf '+x+' '+y+' Td ('+pe(t)+') Tj ET');
+ const wrap=(t,n)=>{const o=[];let l='';for(const w of String(t).split(' ')){if((l+' '+w).trim().length>n){o.push(l);l=w}else l=(l+' '+w).trim()}o.push(l);return o};
+ for(const it of items){const k=it[0];if(y<M+20)np();
+  if(k==='h1'){y-=6;txt('F2',18,M,it[1]);y-=24}else if(k==='h2'){txt('F2',12,M,it[1]);y-=18}
+  else if(k==='p'){for(const l of wrap(it[1],92)){if(y<M)np();txt('F1',11,M,l);y-=15}}
+  else if(k==='row'){txt('F1',10.5,M,it[1]);wrap(it[2]||'-',58).forEach(l=>{if(y<M)np();txt('F2',10.5,M+175,l);y-=15})}
+  else if(k==='sp')y-=10;else if(k==='hr'){cs.push(M+' '+y+' m '+(W-M)+' '+y+' l S');y-=12}}
+ np();const o=[];o[1]='<< /Type /Catalog /Pages 2 0 R >>';o[2]='<< /Type /Pages /Kids ['+pages.map((_,i)=>(5+i*2)+' 0 R').join(' ')+'] /Count '+pages.length+' >>';
+ o[3]='<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>';o[4]='<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>';
+ pages.forEach((c,i)=>{const p=5+i*2;o[p]='<< /Type /Page /Parent 2 0 R /MediaBox [0 0 '+W+' '+H+'] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents '+(p+1)+' 0 R >>';o[p+1]='<< /Length '+c.length+' >>\nstream\n'+c+'\nendstream'});
+ let out='%PDF-1.4\n';const xr=[];for(let i=1;i<o.length;i++){xr[i]=out.length;out+=i+' 0 obj\n'+o[i]+'\nendobj\n'}
+ const x0=out.length;out+='xref\n0 '+o.length+'\n0000000000 65535 f \n'+xr.slice(1).map(v=>String(v).padStart(10,'0')+' 00000 n \n').join('')+'trailer\n<< /Size '+o.length+' /Root 1 0 R >>\nstartxref\n'+x0+'\n%%EOF';
+ return new TextEncoder().encode(out)}
+function pdfData(kind,id){const pr=p=>[['Nama pasien',p.nama],['No. rekam medis',p.rm],['Tanggal lahir',p.tgl?fd(p.tgl):'-'],['Jenis kelamin',p.jk||'-'],['Alamat',p.alamat||'-']];
+ const head=(t,no)=>[['h2','RS SEHATLAB'],['p','Layanan Kesehatan Terpadu'],['hr'],['h1',t.toUpperCase()],['p','Nomor: '+no],['sp']],foot=ttd=>[['sp'],['p','Petugas / dokter:'],['sp'],['sp'],['h2',ttd],['sp'],['hr'],['p','Dokumen contoh untuk demonstrasi aplikasi. Bukan dokumen medis resmi.']];
+ if(kind==='doc'){const d=DB.docs.find(x=>x.id===+id),p=pat(d.pid),T=DOCT[d.jenis];return{name:(T.t+' '+p.nama),b:mkPdf([...head(T.t,d.no),['p',T.intro],['sp'],...[...pr(p),...d.rows].map(r=>['row',r[0],r[1]]),['sp'],['p',T.note],...foot(d.ttd)])}}
+ const l=DB.labs.find(x=>x.id===+id),p=pat(l.pid);
+ return{name:('Hasil '+l.jenis+' '+p.nama),b:mkPdf([...head('Hasil '+l.jenis,'LAB-'+l.id),...[...pr(p),['Tanggal periksa',fd(l.tgl)],...l.items.map(i=>[i.n,i.v+' '+i.u+' - '+FL[i.f]+' (rujukan '+i.r+')'])].map(r=>['row',r[0],r[1]]),...(l.catatan?[['sp'],['p',(l.kat==='Radiologi'?'Kesan: ':'Catatan: ')+l.catatan]]:[]),...foot('Tenaga kesehatan SehatLab')])}}
+async function saveFile(name,bytes){const cl=window.claude;
+ if(cl&&cl.use){try{const dl=await cl.use('downloads');if(dl){await dl.save({filename:name,data:bytes});return 'ok'}}catch(e){if(e&&e.code==='declined')return 'declined'}return 'fail'}
+ try{const u=URL.createObjectURL(new Blob([bytes],{type:'application/pdf'})),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),3000);return 'ok'}catch(e){return 'fail'}}
+
+/* ---------- actions ---------- */
+const ACT={
+ go(el){const v=el.dataset.v,id=el.dataset.id;let arg=null;if(id)arg=v==='ptform'?+id:['labnew','docnew'].includes(v)?{pid:+id}:+id;S.draft=null;go(v,arg)},
+ tab(el){S.tab=el.dataset.v;render()},
+ ask(el){S.cf=el.dataset.v;render()},
+ print(){try{window.print()}catch(e){}},
+ logout(){SESS=null;store.del(KEY+'-s');S.view='home';S.draft=null;render();scrollTo(0,0)},
+ reset(){if(S.cf==='reset'){store.del(KEY);store.del(KEY+'-s');SESS=null;S.cf='';seed().then(()=>{flash('ok','Data direset ke contoh awal.');render()})}else{S.cf='reset';render()}},
+ async demo(el){await doLogin(el.dataset.v,'demo12345')},
+ cancel(el){const r=DB.regs.find(x=>x.id===+el.dataset.id);if(r&&r.status==='menunggu'&&r.pid===myp().id){r.status='batal';save();flash('ok','Pendaftaran dibatalkan.')}S.cf='';render()},
+ labpick(el){S.arg={...S.arg,jenis:el.dataset.v};S.draft=null;render()},
+ docpick(el){S.arg={...S.arg,jenis:el.dataset.v};S.draft=null;render()},
+ editlab(el){const l=DB.labs.find(x=>x.id===+el.dataset.id);S.view='labnew';S.arg={pid:l.pid,jenis:l.kat==='Radiologi'?'Radiologi':l.jenis,rid:l.id};S.draft=null;render();scrollTo(0,0)},
+ dellab(el){const l=DB.labs.find(x=>x.id===+el.dataset.id),pid=l.pid;DB.labs=DB.labs.filter(x=>x.id!==l.id);save();flash('ok','Hasil pemeriksaan dihapus.');go('pt',pid)},
+ async pdf(el){const {name,b}=pdfData(el.dataset.v,el.dataset.id),slug=name.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')+'.pdf',r=await saveFile(slug,b);flash(r==='ok'?'ok':'err',r==='ok'?'Dokumen siap disimpan.':r==='declined'?'Unduhan dibatalkan.':'Unduhan tidak tersedia di tampilan ini. Gunakan tombol Cetak.');render()}
+};
+async function doLogin(email,pw){email=(email||'').trim().toLowerCase();const now=Date.now();S.fails[email]=(S.fails[email]||[]).filter(t=>now-t<3e5);
+ if(S.fails[email].length>=5){flash('err','Terlalu banyak percobaan. Coba lagi dalam beberapa menit.');return render()}
+ const u=DB.users.find(x=>x.email===email);
+ if(u&&await hash(pw,u.salt)===u.pw){SESS=email;store.set(KEY+'-s',email);S.view='home';S.arg=null;S.draft=null;render();scrollTo(0,0)}
+ else{S.fails[email].push(now);flash('err','Email atau kata sandi salah.');render()}}
+const acctErr=(d,needPw)=>{const e=[];if((d.nama||'').trim().length<3)e.push('Nama lengkap minimal 3 huruf.');if(!/^\S+@\S+\.\S+$/.test((d.email||'').trim()))e.push('Email tidak valid.');if((d.password||'').length<8)e.push('Kata sandi minimal 8 karakter.');if(DB.users.some(u=>u.email===(d.email||'').trim().toLowerCase()))e.push('Email sudah terdaftar.');return e};
+const FORMS={
+ login:d=>doLogin(d.email,d.password),
+ async regp(d){const e=acctErr(d);if(e.length){flash('err',e.join(' '));return render()}
+  const email=d.email.trim().toLowerCase(),salt=Math.random().toString(36).slice(2);DB.users.push({email,role:'pasien',nama:d.nama.trim(),salt,pw:await hash(d.password,salt)});
+  const c=d.rm&&d.tgl?DB.patients.find(p=>!p.uid&&p.rm===d.rm.trim().toUpperCase()&&p.tgl===d.tgl):null;
+  if(c){c.uid=email;c.email=email}else newPatient({uid:email,email,nama:d.nama.trim()});
+  save();SESS=email;store.set(KEY+'-s',email);flash('ok','Akun dibuat.'+(c?' Riwayat Anda berhasil ditautkan.':' Lengkapi profil Anda.'));S.view=c&&profOk(c)?'home':'profil';render();scrollTo(0,0)},
+ async regn(d){const e=acctErr(d);if(!JAB.includes(d.jab))e.push('Pilih jabatan.');if(!/^\d{10}$/.test((d.kode||'').trim())||d.kode.trim()!==DB.staffCode)e.push('Kode registrasi tenaga kesehatan salah.');if(e.length){flash('err',e.join(' '));return render()}
+  const email=d.email.trim().toLowerCase(),salt=Math.random().toString(36).slice(2);DB.users.push({email,role:'nakes',nama:d.nama.trim(),jabatan:d.jab,salt,pw:await hash(d.password,salt)});
+  save();SESS=email;store.set(KEY+'-s',email);S.view='home';render();scrollTo(0,0)},
+ profil(d){const e=patErr(d);if(e.length){flash('err',e.join(' '));S.draft=d;return render()}
+  const p=myp();Object.assign(p,{nama:d.nama.trim(),tgl:d.tgl,jk:d.jk,tel:d.tel.trim(),alamat:d.alamat.trim(),gol:d.gol||''});me().nama=p.nama;save();S.draft=null;flash('ok','Profil disimpan. Semua layanan kini terbuka.');go('home')},
+ regnew(d){const e=[],p=myp(),tg=d.tgl;
+  if(!POLI[d.poli]||!POLI[d.poli].includes(d.dokter))e.push('Pilih poli dan dokter.');
+  if(!validDate(tg)||tg<today()||tg>addDays(today(),60))e.push('Tanggal kunjungan harus dalam 60 hari ke depan.');
+  if(!JAM.includes(d.jam))e.push('Pilih jam.');if(!BAYAR.includes(d.bayar))e.push('Pilih cara bayar.');
+  if(!e.length&&DB.regs.some(r=>r.pid===p.id&&r.poli===d.poli&&r.tgl===tg&&['menunggu','dipanggil'].includes(r.status)))e.push('Anda sudah terdaftar di poli ini pada tanggal tersebut.');
+  if(e.length){flash('err',e.join(' '));S.draft=d;return render()}
+  const no=Math.max(0,...DB.regs.filter(r=>r.tgl===tg&&r.poli===d.poli).map(r=>r.no))+1;
+  DB.regs.push({id:nid(),pid:p.id,poli:d.poli,dokter:d.dokter,tgl:tg,jam:d.jam,keluhan:(d.keluhan||'').trim().slice(0,500),bayar:d.bayar,no,status:'menunggu'});if(d.bayar==='Umum')addBill(p.id,'Pendaftaran '+d.poli,60000);save();S.draft=null;flash('ok','Pendaftaran berhasil. Nomor antrean Anda: '+no+'.');go('reg')},
+ qfilter(d){S.date=validDate(d.date)?d.date:today();S.stat=STAT.includes(d.stat)?d.stat:'';render()},
+ psearch(d){S.q=(d.q||'').trim();render()},
+ ptform(d){const e=patErr(d,true);const p=S.arg?pat(S.arg):null;if(e.length){flash('err',e.join(' '));S.draft=d;return render()}
+  const rec={nama:d.nama.trim(),tgl:d.tgl,jk:d.jk,tel:d.tel.trim(),alamat:d.alamat.trim(),gol:d.gol||''};let id;
+  if(p){Object.assign(p,rec);if(!p.uid)p.email=(d.email||'').trim().toLowerCase();else{const u=DB.users.find(x=>x.email===p.uid);if(u)u.nama=rec.nama}id=p.id}else id=newPatient({...rec,email:(d.email||'').trim().toLowerCase()});
+  save();S.draft=null;flash('ok','Data pasien disimpan.');go('pt',id)},
+ lab(d){const a=S.arg,rad=a.jenis==='Radiologi',e=[],rec=a.rid?DB.labs.find(l=>l.id===a.rid):null;let nama=a.jenis,items=[];
+  if(!validDate(d.tgl)||d.tgl>today())e.push('Tanggal pemeriksaan tidak valid.');
+  const catatan=(d.catatan||'').trim().slice(0,1000);
+  if(rad){nama=d.pem==='Lainnya'?(d.lain||'').trim().slice(0,80):d.pem;if(!nama)e.push('Nama pemeriksaan wajib diisi.');if(!catatan)e.push('Kesan/hasil wajib diisi.')}
+  else{for(let i=0;('n'+i) in d&&i<40;i++){const n=(d['n'+i]||'').trim().slice(0,60),raw=(d['v'+i]||'').trim();
+    if(n&&raw){const v=num(raw),los=(d['lo'+i]||'').trim(),his=(d['hi'+i]||'').trim(),lo=los?num(los):null,hi=his?num(his):null;
+     if(v==null||(los&&lo==null)||(his&&hi==null))e.push(`Nilai dan batas rujukan '${n}' harus berupa angka.`);else items.push(mkItem(n,v,(d['u'+i]||'').trim().slice(0,20),lo,hi))}
+    else if(raw&&!n)e.push('Ada nilai tanpa nama parameter.')}
+   if(!items.length&&!e.length)e.push('Isi minimal satu nilai pemeriksaan.')}
+  if(e.length){flash('err',e.join(' '));S.draft=d;return render()}
+  let id;if(rec){Object.assign(rec,{jenis:nama,tgl:d.tgl,catatan,items});id=rec.id}else{id=nid();DB.labs.push({id,pid:a.pid,kat:rad?'Radiologi':'Lab',jenis:nama,tgl:d.tgl,catatan,items})}
+  save();S.draft=null;flash('ok','Hasil pemeriksaan disimpan dan langsung tampil di akun pasien.');go('labv',id)},
+ doc(d){const a=S.arg,T=DOCT[a.jenis],e=[],rows=[];const terbit=validDate(d.tgl)?d.tgl:today();
+  for(const [k,l,t] of T.f){const v=(d[k]||'').trim().slice(0,300);if(!v){e.push(l+' wajib diisi.');continue}
+   if(t==='date'&&!validDate(v)){e.push(l+' tidak valid.');continue}
+   if(t==='number'&&!(/^\d+$/.test(v)&&+v>=1&&+v<=30)){e.push(l+' harus 1–30.');continue}
+   rows.push([l,t==='date'?fd(v):t==='number'?v+' hari':v])}
+  if(e.length){flash('err',e.join(' '));S.draft=d;return render()}
+  if(a.jenis==='rujukan')rows.push(['Berlaku sampai',fd(addDays(terbit,90))]);
+  if(a.jenis==='sks')rows.push(['Sampai tanggal',fd(addDays(d.mulai,+d.hari-1))]);
+  rows.unshift(['Tanggal terbit',fd(terbit)]);
+  const n=DB.docs.filter(x=>x.jenis===a.jenis&&x.tgl.slice(0,4)===terbit.slice(0,4)).length+1,u=me(),id=nid();
+  DB.docs.push({id,pid:a.pid,jenis:a.jenis,no:T.pre+'/'+terbit.slice(0,4)+'/'+String(n).padStart(4,'0'),tgl:terbit,rows,ttd:u.nama,jab:u.jabatan||'Tenaga kesehatan'});
+  save();S.draft=null;flash('ok','Dokumen diterbitkan dan tampil di akun pasien.');go('docv',id)}
+};
+function patErr(d,staff){const e=[];if((d.nama||'').trim().length<3)e.push('Nama lengkap minimal 3 huruf.');
+ if(!validDate(d.tgl)||d.tgl>today())e.push('Tanggal lahir tidak valid.');if(!JK.includes(d.jk))e.push('Pilih jenis kelamin.');
+ const dg=(d.tel||'').replace(/\D/g,'');if(dg.length<8||dg.length>15)e.push('Nomor telepon harus 8–15 angka.');
+ if((d.alamat||'').trim().length<5)e.push('Alamat belum lengkap.');if(d.gol&&!GOL.includes(d.gol))e.push('Golongan darah tidak valid.');
+ if(staff&&d.email&&!/^\S+@\S+\.\S+$/.test(d.email.trim()))e.push('Format email tidak valid.');return e}
+
+/* ---------- layanan tambahan ---------- */
+const rand10=()=>{let s='';const u=new Uint8Array(60);try{crypto.getRandomValues(u)}catch(e){for(let i=0;i<60;i++)u[i]=Math.random()*256}for(const x of u){if(x<250){s+=x%10;if(s.length===10)break}}while(s.length<10)s+=Math.floor(Math.random()*10);return s};
+function migrate(){DB.consults=DB.consults||[];DB.bookings=DB.bookings||[];DB.bills=DB.bills||[];DB.orders=DB.orders||[];if(!/^\d{10}$/.test(DB.staffCode||''))DB.staffCode=rand10()}
+const money=n=>'Rp'+n.toLocaleString('id-ID');
+const kode=p=>p+'-'+Math.random().toString(36).slice(2,7).toUpperCase();
+const ini=n=>n.replace(/^(dr\.|drg\.|Bd\.)\s*/,'').split(' ').filter(Boolean).slice(0,2).map(w=>w[0]).join('').toUpperCase();
+const hd=(t,s)=>`${A('go','home','‹ Beranda','back')}<h1>${t}</h1><p class="mute" style="margin:4px 0 6px">${s}</p>`;
+const addBill=(pid,t,a)=>{const b={id:nid(),pid,t,a,paid:false,ts:Date.now()};DB.bills.push(b);return b};
+const finish=d=>{S.view='done';S.done=d;render();scrollTo(0,0)};
+const SPES=[['dr. Bagus Wirawan, Sp.PD','Penyakit Dalam',150000,1],['dr. Citra Dewi, Sp.A','Anak',140000,1],['dr. Dewi Anggraini, Sp.OG','Kandungan',160000,0],['dr. Eko Santoso, Sp.JP','Jantung',200000,1]];
+const EXAM=[['Hematologi rutin','Lab',95000],['Gula darah puasa','Lab',35000],['Profil lipid','Lab',185000],['Fungsi hati (SGOT/SGPT)','Lab',120000],['Urinalisis','Lab',50000],['Rontgen thorax','Radiologi',180000],['USG abdomen','Radiologi',350000],['CT scan kepala','Radiologi',1450000]];
+const MCU=[['Basic',450000,['Pemeriksaan fisik','Hematologi rutin','Gula darah','Urinalisis']],['Eksekutif',1850000,['Semua paket Basic','Profil lipid','Fungsi hati & ginjal','Rontgen thorax','USG abdomen']],['Jantung',1450000,['EKG','Profil lipid','Gula darah','Konsultasi dokter jantung']],['Wanita',1250000,['Pap smear','USG payudara','Hematologi rutin','Konsultasi kandungan']]];
+const KAMAR=[['VIP',2,1500000,'1 pasien, kamar mandi dalam, sofa penunggu'],['Kelas 1',4,850000,'2 pasien, kamar mandi dalam'],['Kelas 2',0,550000,'3–4 pasien'],['Kelas 3',9,250000,'4–6 pasien'],['ICU',1,2500000,'Pemantauan 24 jam']];
+const OBAT=[['Paracetamol 500 mg','Obat bebas',6000,25],['Amoxicillin 500 mg','Resep dokter',22000,12],['Vitamin C 500 mg','Suplemen',48000,40],['Cetirizine 10 mg','Obat bebas terbatas',9000,0],['Omeprazole 20 mg','Resep dokter',18000,8],['Oralit','Obat bebas',3000,60],['Metformin 500 mg','Resep dokter',12000,15]];
+const PROD=[['Masker medis 50 pcs',35000,'Isi 50, 3 lapis'],['Vitamin C 500 mg',48000,'30 tablet'],['Termometer digital',65000,'Ukur dalam 10 detik'],['Hand sanitizer 100 ml',18000,'Alkohol 70%'],['Oksimeter jari',175000,'Kadar oksigen & nadi'],['Tensimeter digital',320000,'Lengan atas, memori 60 data']];
+const BANK=[['BCA','39'],['Mandiri','88'],['BNI','988'],['BRI','26215']];
+const DOK=Object.entries(POLI).flatMap(([p,a])=>a.map(n=>[n,p,'Sen–Jum 08.00–15.00']));
+const vaNo=pre=>{const p=myp(),d=(p.tel||'').replace(/\D/g,'').replace(/^0/,'')||p.rm.replace(/\D/g,'');return pre+(d+'0000000000').slice(0,10)};
+const fmt=t=>String(Math.floor(t/60)).padStart(2,'0')+':'+String(t%60).padStart(2,'0');
+const bubble=m=>`<div style="display:flex;${m.f==='p'?'justify-content:flex-end':''}"><div style="max-width:88%;padding:10px 13px;border-radius:14px;${m.f==='p'?'background:linear-gradient(135deg,var(--brand),var(--c5));color:#fff;border-bottom-right-radius:4px':'background:var(--card);border:2px solid var(--line);border-bottom-left-radius:4px'}">${esc(m.t)}<div style="font-size:11px;opacity:.7;margin-top:3px">${new Date(m.ts).toLocaleString('id-ID',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})}</div></div></div>`;
+
+PV.done=()=>{const d=S.done;if(!d)return PV.home();return `<div class="card stack" style="text-align:center"><div><span class="chip ok">Berhasil</span></div><h1>${esc(d.title)}</h1><div class="val" style="letter-spacing:.06em">${d.kode}</div><p class="mute">Simpan kode ini sebagai bukti.</p></div><div class="card" style="margin-top:12px">${d.rows.map(r=>`<div class="rhead" style="padding:8px 0;gap:16px"><span class="mute">${r[0]}</span><b style="text-align:right">${esc(r[1])}</b></div>`).join('')}</div>${d.bill?`<button class="btn" data-act="go" data-v="va" style="margin-top:14px">Lihat info pembayaran</button>`:''}<button class="btn ghost" data-act="go" data-v="home" style="margin-top:10px">Kembali ke beranda</button>`};
+const konForm=e=>{const u=DB.users.find(x=>x.email===e);return `<div class="row" style="margin-bottom:6px"><div class="avatar">${esc(ini(u.nama))}</div><div class="grow"><h3>${esc(u.nama)}</h3><div class="mute">${esc(u.jabatan)}</div></div><button class="btn ghost sm" data-act="picknk" data-v="">Ganti</button></div><form data-form="konsul">${ta('keluhan','Keluhan Anda','',true,'Contoh: demam sejak 3 hari, disertai pusing.')}<div class="actions"><button class="btn">Kirim keluhan</button></div></form>`};
+PV.konsul=()=>{const p=myp(),st=DB.users.filter(u=>u.role==='nakes'),th=DB.consults.filter(c=>c.pid===p.id).sort((a,b)=>b.id-a.id);
+ return `${hd('Konsultasi','Pilih tenaga kesehatan lalu kirim keluhan Anda.')}${S.pickN?konForm(S.pickN):`<div class="stack">${st.map(u=>`<a href="#" class="row" data-act="picknk" data-v="${esc(u.email)}"><div class="avatar">${esc(ini(u.nama))}</div><div class="grow"><h3>${esc(u.nama)}</h3><div class="mute">${esc(u.jabatan)}</div></div><span class="chip ok">Tersedia</span></a>`).join('')}</div>`}
+${th.length?`<h2 style="margin-top:22px">Riwayat konsultasi</h2><div class="stack">${th.map(c=>{const l=c.msgs[c.msgs.length-1];return row(`data-act="go" data-v="konsulc" data-id="${c.id}"`,esc(c.nkName),esc(l.t.slice(0,48)),`<span class="chip ${c.status==='selesai'?'n':l.f==='n'?'ok':'lo'}">${c.status==='selesai'?'Selesai':l.f==='n'?'Dibalas':'Menunggu'}</span>`)}).join('')}</div>`:''}`};
+PV.konsulc=()=>{const p=myp(),c=DB.consults.find(x=>x.id===+S.arg&&x.pid===p.id);if(!c)return PV.konsul();
+ return `${A('go','konsul','‹ Konsultasi','back')}<h1>${esc(c.nkName)}</h1><p class="mute" style="margin-bottom:14px">${c.status==='selesai'?'Konsultasi telah diselesaikan.':'Balasan muncul di sini setelah tenaga kesehatan menjawab.'}</p><div class="stack">${c.msgs.map(bubble).join('')}</div>
+${c.status==='selesai'?'':`<form data-form="konmsg" style="margin-top:14px">${ta('t','Pesan','',true,'Tulis pesan...')}<div class="actions"><button class="btn">Kirim</button></div></form>`}<p class="note" style="margin-top:14px">Konsultasi ini tidak menggantikan pemeriksaan langsung. Jika kondisi darurat, segera ke IGD terdekat.</p>`};
+PV.vc=()=>{if(S.call){const d=S.call.d;return `<div class="card" style="background:#0f2422;color:#e6f0ee;text-align:center;padding:28px 16px"><div class="avatar" style="width:88px;height:88px;margin:0 auto 12px;font-size:28px">${esc(ini(d[0]))}</div><h2>${d[0]}</h2><div style="color:#93aca8">${d[1]}</div><div class="val" id="tm" style="margin:14px 0;color:#e6f0ee">${fmt(S.call.t)}</div><div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap"><button class="btn ghost sm" data-act="tg" data-l="Mikrofon" style="color:#e6f0ee;border-color:#93aca8">Mikrofon aktif</button><button class="btn ghost sm" data-act="tg" data-l="Kamera" style="color:#e6f0ee;border-color:#93aca8">Kamera aktif</button></div></div><div style="margin-top:14px"><button class="btn danger" data-act="vcend">Akhiri panggilan</button></div><p class="note" style="margin-top:14px">Tampilan demo, belum tersambung ke video sungguhan. Biaya sesi masuk ke tagihan.</p>`}
+ return `${hd('Video Call Spesialis','Konsultasi tatap muka online dengan dokter spesialis.')}<div class="stack" style="margin-top:10px">${SPES.map((d,i)=>`<div class="row"><div class="avatar">${esc(ini(d[0]))}</div><div class="grow"><h3>${d[0]}</h3><div class="mute">${d[1]} · ${money(d[2])}/sesi</div></div><button class="btn sm" data-act="vcstart" data-v="${i}" ${d[3]?'':'disabled'}>${d[3]?'Mulai':'Sibuk'}</button></div>`).join('')}</div>`};
+PV.penunjang=()=>{const g=c=>EXAM.map((e,i)=>e[1]===c?`<label class="row" style="margin:0"><input type="checkbox" name="ex${i}" style="width:22px;min-height:22px;flex:none"><span class="grow">${e[0]}</span><b>${money(e[2])}</b></label>`:'').join('');
+ return `${hd('Lab & Radiologi','Pilih pemeriksaan lalu jadwalkan kunjungan.')}<form data-form="pen"><h2 style="margin-top:12px">Laboratorium</h2><div class="stack">${g('Lab')}</div><h2 style="margin-top:18px">Radiologi</h2><div class="stack">${g('Radiologi')}</div>${inp('tgl','Tanggal pemeriksaan','','date',{min:today(),max:addDays(today(),180)})}<div class="card rhead" style="margin-top:14px"><span>Total</span><b id="tot">Rp0</b></div><div class="actions"><button class="btn">Buat jadwal</button></div></form>`};
+PV.mcu=()=>`${hd('Medical Check Up','Pilih paket pemeriksaan kesehatan menyeluruh.')}<form data-form="mcu"><div class="stack" style="margin-top:10px">${MCU.map((m,i)=>`<label class="row" style="margin:0;align-items:flex-start"><input type="radio" name="mp" value="${i}" ${i?'':'checked'} style="width:22px;min-height:22px;flex:none;margin-top:3px"><span class="grow"><h3>${m[0]}</h3><span class="mute" style="font-weight:400">${m[2].join(' · ')}</span></span><b>${money(m[1])}</b></label>`).join('')}</div>${inp('tgl','Tanggal MCU','','date',{min:today(),max:addDays(today(),180)})}<div class="actions"><button class="btn">Pesan paket</button></div></form>`;
+const rsRows=q=>{q=q.toLowerCase();const t=S.rsTab||'nakes';
+ if(t==='inap')return KAMAR.map(k=>`<div class="row"><div class="grow"><h3>${k[0]}</h3><div class="mute">${money(k[2])}/malam · ${k[3]}</div></div><span class="chip ${k[1]?'ok':'hi'}">${k[1]?k[1]+' bed kosong':'Penuh'}</span></div>`).join('');
+ const L=t==='nakes'?[...DB.users.filter(u=>u.role==='nakes').map(u=>[u.nama,u.jabatan,'Sesuai jadwal']),...DOK].filter(d=>(d[0]+d[1]).toLowerCase().includes(q)).map(d=>`<div class="row"><div class="avatar">${esc(ini(d[0]))}</div><div class="grow"><h3>${esc(d[0])}</h3><div class="mute">${esc(d[1])} · ${esc(d[2])}</div></div></div>`)
+  :OBAT.filter(o=>o[0].toLowerCase().includes(q)).map(o=>`<div class="row"><div class="grow"><h3>${o[0]}</h3><div class="mute">${o[1]} · ${money(o[2])}</div></div><span class="chip ${o[3]?'ok':'hi'}">${o[3]?'Stok '+o[3]:'Habis'}</span></div>`);
+ return L.length?L.join(''):`<p class="mute">Tidak ada hasil untuk "${esc(q)}". Coba kata kunci lain.</p>`};
+PV.rs=()=>{const t=S.rsTab||'nakes';return `${hd('Informasi Rumah Sakit','Cari tenaga kesehatan, kamar, dan obat.')}<div class="seg" role="group">${[['nakes','Cari nakes'],['inap','Rawat inap'],['obat','Cari obat']].map(([k,l])=>`<button type="button" data-act="rstab" data-v="${k}" aria-pressed="${t===k}">${l}</button>`).join('')}</div>${t==='inap'?'':`<input id="qs" type="search" placeholder="${t==='nakes'?'Nama dokter atau poli':'Nama obat'}" aria-label="Pencarian">`}<div class="stack" id="rl" style="margin-top:12px">${rsRows('')}</div>`};
+PV.va=()=>{const p=myp(),bl=DB.bills.filter(b=>b.pid===p.id).sort((a,b)=>b.id-a.id),tot=bl.filter(b=>!b.paid).reduce((a,b)=>a+b.a,0);
+ return `${hd('Virtual Account','Bayar tagihan lewat transfer ke nomor VA Anda.')}<div class="card" style="margin-top:10px"><div class="mute">Total belum dibayar</div><div class="val">${money(tot)}</div></div><h2 style="margin-top:18px">Nomor virtual account</h2><div class="stack">${BANK.map(b=>`<div class="row"><div class="grow"><h3>Bank ${b[0]}</h3><div class="val" style="font-size:17px;letter-spacing:.04em">${vaNo(b[1])}</div></div><button class="btn ghost sm" data-act="cp" data-v="${vaNo(b[1])}">Salin</button></div>`).join('')}</div><h2 style="margin-top:18px">Tagihan</h2>${bl.length?`<div class="stack">${bl.map(b=>`<div class="row"><div class="grow"><h3>${esc(b.t)}</h3><div class="mute">${money(b.a)}</div></div>${b.paid?'<span class="chip ok">Lunas</span>':`<button class="btn sm" data-act="pay" data-id="${b.id}">Simulasi bayar</button>`}</div>`).join('')}</div>`:'<p class="mute">Belum ada tagihan. Tagihan muncul setelah Anda mendaftar, memesan pemeriksaan, video call, atau berbelanja.</p>'}<details class="card" style="margin-top:18px"><summary><b>Cara membayar</b></summary><ol style="margin:10px 0 0 20px"><li>Buka aplikasi mobile banking atau ATM.</li><li>Pilih transfer ke virtual account.</li><li>Masukkan nomor VA dan cek nominalnya.</li><li>Konfirmasi. Status berubah menjadi lunas.</li></ol></details>`};
+PV.shop=()=>{const c=S.cart||{},n=Object.values(c).reduce((a,b)=>a+b,0),tot=Object.entries(c).reduce((a,[i,q])=>a+PROD[i][1]*q,0);
+ return `${hd('E-Commerce','Obat bebas dan alat kesehatan.')}<div class="stack" style="margin-top:10px">${PROD.map((p,i)=>{const q=c[i]||0;return `<div class="row"><div class="grow"><h3>${p[0]}</h3><div class="mute">${p[2]}</div><b>${money(p[1])}</b></div>${q?`<div style="display:flex;gap:8px;align-items:center"><button class="btn ghost" style="width:40px;min-height:40px;padding:0" data-act="cartq" data-v="${i}" data-id="-1" aria-label="Kurangi">−</button><b>${q}</b><button class="btn ghost" style="width:40px;min-height:40px;padding:0" data-act="cartq" data-v="${i}" data-id="1" aria-label="Tambah">+</button></div>`:`<button class="btn ghost sm" data-act="cartq" data-v="${i}" data-id="1">Tambah</button>`}</div>`}).join('')}</div>${n?`<div class="card rhead" style="margin-top:14px"><span>${n} barang</span><b>${money(tot)}</b></div><div style="margin-top:10px"><button class="btn" data-act="checkout">Checkout</button></div>`:''}`};
+
+/* staf: konsultasi, jadwal pemeriksaan, kode registrasi */
+NV.kons=()=>{const u=me(),th=DB.consults.filter(c=>c.nk===u.email).sort((a,b)=>{const ua=a.msgs[a.msgs.length-1].f==='p'&&a.status!=='selesai',ub=b.msgs[b.msgs.length-1].f==='p'&&b.status!=='selesai';return ub-ua||b.id-a.id});
+ return `<h1>Konsultasi pasien</h1><p class="mute" style="margin:4px 0 14px">Pesan dari pasien yang memilih Anda sebagai tenaga kesehatan.</p><div class="stack">${th.map(c=>{const l=c.msgs[c.msgs.length-1],p=pat(c.pid),w=l.f==='p'&&c.status!=='selesai';return row(`data-act="go" data-v="konst" data-id="${c.id}"`,esc(p.nama),esc(l.t.slice(0,60)),`<span class="chip ${c.status==='selesai'?'n':w?'hi':'ok'}">${c.status==='selesai'?'Selesai':w?'Perlu dibalas':'Dibalas'}</span>`)}).join('')||'<p class="mute">Belum ada konsultasi.</p>'}</div>`};
+NV.konst=()=>{const c=DB.consults.find(x=>x.id===+S.arg);if(!c)return NV.kons();const p=pat(c.pid);
+ return `${A('go','kons','‹ Semua konsultasi','back')}<h1>${esc(p.nama)}</h1><p class="mute" style="margin-bottom:14px">${p.rm} · ${A('go','pt','Lihat data pasien','','data-id="'+p.id+'"')}</p><div class="stack" style="max-width:640px">${c.msgs.map(m=>bubble({...m,f:m.f==='p'?'n':'p'})).join('')}</div>
+${c.status==='selesai'?'<p class="note" style="margin-top:14px">Konsultasi ini sudah diselesaikan.</p>':`<form data-form="konreply" style="margin-top:14px;max-width:640px">${ta('t','Balasan','',true,'Tulis balasan untuk pasien...')}<div class="actions"><button class="btn">Kirim balasan</button><button type="button" class="btn ghost" data-act="konend" data-id="${c.id}">Tandai selesai</button></div></form>`}`};
+const bkTbl=()=>{const rows=DB.bookings.filter(b=>b.tgl===S.date).sort((a,b)=>a.id-b.id);
+ return `<h2>Pemeriksaan lab, radiologi &amp; MCU terjadwal</h2><div class="scroll"><table class="tbl"><tr><th>Pasien</th><th>Jenis</th><th>Pemeriksaan</th><th>Status</th><th>Ubah status</th></tr>${rows.map(b=>{const p=pat(b.pid);return `<tr><td>${A('go','pt',esc(p.nama),'','data-id="'+p.id+'"')}<div class="mute">${p.rm}</div></td><td>${b.kind==='mcu'?'MCU':'Lab/Radiologi'}</td><td>${esc(b.items.join(', '))}</td><td>${chip(b.status)}</td><td><select data-chg="bstatus" data-id="${b.id}" style="min-height:38px;width:auto" aria-label="Ubah status">${['terjadwal','selesai','batal'].map(s=>`<option value="${s}" ${s===b.status?'selected':''}>${s[0].toUpperCase()+s.slice(1)}</option>`).join('')}</select></td></tr>`}).join('')||'<tr><td colspan="5" class="mute">Tidak ada jadwal pada tanggal ini.</td></tr>'}</table></div>`};
+const codeCard=()=>`<div class="card" style="margin:14px 0"><div class="mute">Kode registrasi tenaga kesehatan (bagikan hanya ke staf resmi)</div><div class="val" style="letter-spacing:.18em;font-size:26px">${DB.staffCode}</div><div class="actions"><button class="btn ghost sm" data-act="newcode">Buat kode baru</button></div></div>`;
+
+/* aksi & form tambahan */
+Object.assign(ACT,{
+ picknk(el){S.pickN=el.dataset.v||null;render()},
+ rstab(el){S.rsTab=el.dataset.v;render()},
+ tg(el){const on=el.dataset.on!=='0';el.dataset.on=on?'0':'1';el.textContent=el.dataset.l+(on?' mati':' aktif')},
+ vcstart(el){const d=SPES[+el.dataset.v];if(!d||!d[3])return;S.call={d,t:0};render();clearInterval(S.tmr);S.tmr=setInterval(()=>{if(!S.call)return;S.call.t++;const e=$('#tm');if(e)e.textContent=fmt(S.call.t)},1000)},
+ vcend(){clearInterval(S.tmr);const c=S.call,p=myp();if(!c)return;S.call=null;const b=addBill(p.id,'Video call '+c.d[0],c.d[2]);save();finish({title:'Panggilan selesai',kode:kode('VC'),rows:[['Dokter',c.d[0]],['Durasi',fmt(c.t)],['Biaya sesi',money(c.d[2])]],bill:b})},
+ cp(el){const v=el.dataset.v;try{navigator.clipboard.writeText(v).then(()=>{flash('ok','Nomor VA disalin.');render()},()=>{flash('err','Salin nomor VA secara manual.');render()})}catch(e){flash('err','Salin nomor VA secara manual.');render()}},
+ pay(el){const b=DB.bills.find(x=>x.id===+el.dataset.id&&x.pid===myp().id);if(b){b.paid=true;save();flash('ok','Pembayaran tercatat lunas.')}render()},
+ cartq(el){S.cart=S.cart||{};const i=el.dataset.v,q=(S.cart[i]||0)+ +el.dataset.id;if(q>0)S.cart[i]=q;else delete S.cart[i];render()},
+ checkout(){const c=S.cart||{},it=Object.entries(c),p=myp();if(!it.length)return;const tot=it.reduce((a,[i,q])=>a+PROD[i][1]*q,0),nm=it.map(([i,q])=>PROD[i][0]+' ×'+q).join(', ');
+  DB.orders.push({id:nid(),pid:p.id,items:it.map(([i,q])=>[PROD[i][0],q,PROD[i][1]]),total:tot,tgl:today()});const b=addBill(p.id,'Pesanan e-commerce',tot);S.cart={};save();finish({title:'Pesanan dibuat',kode:kode('ORD'),rows:[['Barang',nm],['Total',money(tot)],['Pengiriman','Estimasi 1–2 hari']],bill:b})},
+ konend(el){const c=DB.consults.find(x=>x.id===+el.dataset.id);if(c){c.status='selesai';save();flash('ok','Konsultasi ditandai selesai.')}go('kons')},
+ newcode(){DB.staffCode=rand10();save();flash('ok','Kode registrasi baru dibuat.');render()}
+});
+Object.assign(FORMS,{
+ konsul(d){const t=(d.keluhan||'').trim();if(t.length<5){flash('err','Tulis keluhan minimal 5 karakter.');return render()}
+  const u=DB.users.find(x=>x.email===S.pickN&&x.role==='nakes');if(!u){flash('err','Pilih tenaga kesehatan.');return render()}
+  const id=nid();DB.consults.push({id,pid:myp().id,nk:u.email,nkName:u.nama,status:'terbuka',msgs:[{f:'p',t:t.slice(0,1000),ts:Date.now()}]});save();S.pickN=null;flash('ok','Keluhan terkirim. Balasan muncul di halaman ini.');go('konsulc',id)},
+ konmsg(d){const c=DB.consults.find(x=>x.id===+S.arg&&x.pid===myp().id),t=(d.t||'').trim();if(!c||c.status==='selesai')return;if(!t){flash('err','Pesan tidak boleh kosong.');return render()}c.msgs.push({f:'p',t:t.slice(0,1000),ts:Date.now()});save();render()},
+ konreply(d){const c=DB.consults.find(x=>x.id===+S.arg&&x.nk===me().email),t=(d.t||'').trim();if(!c||c.status==='selesai')return;if(!t){flash('err','Balasan tidak boleh kosong.');return render()}c.msgs.push({f:'n',t:t.slice(0,1000),ts:Date.now()});save();flash('ok','Balasan terkirim.');render()},
+ pen(d){const ix=Object.keys(d).filter(k=>/^ex\d+$/.test(k)).map(k=>+k.slice(2)).filter(i=>EXAM[i]);
+  if(!ix.length){flash('err','Pilih minimal satu pemeriksaan.');return render()}if(!validDate(d.tgl)||d.tgl<today()||d.tgl>addDays(today(),180)){flash('err','Pilih tanggal pemeriksaan mulai hari ini.');return render()}
+  const tot=ix.reduce((a,i)=>a+EXAM[i][2],0),nm=ix.map(i=>EXAM[i][0]),p=myp(),no=kode('PMR');DB.bookings.push({id:nid(),pid:p.id,kind:'lab',title:'Lab & Radiologi',items:nm,tgl:d.tgl,total:tot,status:'terjadwal',no});const b=addBill(p.id,'Pemeriksaan lab/radiologi',tot);save();
+  finish({title:'Jadwal pemeriksaan dibuat',kode:no,rows:[['Pemeriksaan',nm.join(', ')],['Jadwal',fd(d.tgl)],['Total biaya',money(tot)],['Catatan','Datang 15 menit lebih awal']],bill:b})},
+ mcu(d){const m=MCU[+d.mp];if(!m){flash('err','Pilih paket.');return render()}if(!validDate(d.tgl)||d.tgl<today()||d.tgl>addDays(today(),180)){flash('err','Pilih tanggal MCU mulai hari ini.');return render()}
+  const p=myp(),no=kode('MCU');DB.bookings.push({id:nid(),pid:p.id,kind:'mcu',title:'MCU '+m[0],items:['Paket MCU '+m[0],...m[2]],tgl:d.tgl,total:m[1],status:'terjadwal',no});const b=addBill(p.id,'Medical Check Up '+m[0],m[1]);save();
+  finish({title:'Paket MCU dipesan',kode:no,rows:[['Paket','MCU '+m[0]],['Jadwal',fd(d.tgl)+', 07.30'],['Total biaya',money(m[1])],['Persiapan','Puasa 10–12 jam sebelum pemeriksaan']],bill:b})}
+});
+document.addEventListener('input',e=>{if(e.target.id==='qs'){const r=$('#rl');if(r)r.innerHTML=rsRows(e.target.value.trim())}});
+document.addEventListener('change',e=>{const el=e.target;
+ if(el.name&&/^ex\d+$/.test(el.name)&&$('#tot')){$('#tot').textContent=money([...document.querySelectorAll('input[name^="ex"]:checked')].reduce((a,x)=>a+EXAM[+x.name.slice(2)][2],0))}
+ if(el.dataset&&el.dataset.chg==='bstatus'&&['terjadwal','selesai','batal'].includes(el.value)){const b=DB.bookings.find(x=>x.id===+el.dataset.id);if(b){b.status=el.value;save();render()}}});
+
+/* ---------- events ---------- */
+document.addEventListener('click',e=>{const el=e.target.closest('[data-act]');if(!el)return;e.preventDefault();const f=ACT[el.dataset.act];if(f)f(el)});
+document.addEventListener('submit',e=>{const f=e.target.closest('form[data-form]');if(!f)return;e.preventDefault();const fn=FORMS[f.dataset.form];if(fn)fn(Object.fromEntries(new FormData(f)))});
+document.addEventListener('change',e=>{const el=e.target;
+ if(el.id==='poli'&&el.form&&el.form.dataset.form==='regnew'){const d=$('#dokter');d.innerHTML=(POLI[el.value]||[]).map(x=>`<option>${esc(x)}</option>`).join('')||'<option value="">Pilih poli dahulu</option>'}
+ if(el.dataset&&el.dataset.chg==='status'){const r=DB.regs.find(x=>x.id===+el.dataset.id);if(r&&STAT.includes(el.value)){r.status=el.value;save();render()}}});
+
+/* ---------- init ---------- */
+(async function init(){
+ try{DB=JSON.parse(store.get(KEY))}catch(e){DB=null}
+ if(!DB||!DB.users)await seed();
+ migrate();save();
+ SESS=store.get(KEY+'-s');if(SESS&&!me())SESS=null;
+ render();
+})();
+})();
+</script>
+</body>
+</html>
